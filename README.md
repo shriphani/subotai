@@ -1,6 +1,6 @@
 # subotai
 
-<img src="subotai.jpg" /><br />
+<img src="subotai.jpg" style="width: 50%; height: 50%" /><br />
 
 Subotai contains a swiss-army-knife of data-mining tools on HTML
 documents. It contains routines for:
