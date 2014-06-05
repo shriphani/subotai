@@ -1,6 +1,12 @@
 # subotai
 
-A Clojure library designed to ... well, that part is up to you.
+<img src="subotai.jpg" /><br />
+
+Subotai contains a swiss-army-knife of data-mining tools on HTML
+documents. It contains routines for:
+
+1. Comparing the similarity (in structure) of HTML documents.
+2. Extracting sets of records from these HTML documents.
 
 ## Usage
 
