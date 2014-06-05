@@ -10,11 +10,13 @@ documents. It contains routines for:
 
 ## Usage
 
-FIXME
+Structural similarity routines are available in the
+<code>subotai.structural-similarity</code> namespace. Record
+extraction routines are in the <code>subotai.records</code> namespace.
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Shriphani Palakodety
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
