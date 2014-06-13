@@ -14,7 +14,8 @@ A list of the algorithms implemented:
 
 * Structural similarity using tree-edit-distance from [Reis,
   Davi de Castro, et al](doc/rtdm.pdf)
-* Extract records from a web-page.
+* Extract records from a web-page - from
+[Xinying Song, Jing Liu, Yunbo Cao, Chin-Yew Lin, Hsiao-Wuen Hon](doc/extraction.pdf)
 
 
 ## Usage
