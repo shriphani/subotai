@@ -12,8 +12,8 @@ documents. It contains routines for:
 
 A list of the algorithms implemented:
 
-* Structural similarity using tree-edit-distance from Reis,
-  [Davi de Castro, et al](rtdm.pdf)
+* Structural similarity using tree-edit-distance from [Reis,
+  Davi de Castro, et al](doc/rtdm.pdf)
 * Extract records from a web-page.
 
 
