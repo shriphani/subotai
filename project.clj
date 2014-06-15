@@ -5,6 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[clj-http "0.7.9"]
                  [com.github.kyleburton/clj-xpath "1.4.2"]
+                 [edu.stanford.nlp/stanford-parser "3.3.1"]
                  [enlive "1.1.4"]
                  [me.raynes/fs "1.4.4"]
                  [net.sourceforge.htmlcleaner/htmlcleaner "2.6"]
