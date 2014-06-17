@@ -1,14 +1,10 @@
 (ns subotai.near-duplicate.core
   "Near-Duplicate detection algorithms
    for HTML documents"
-  (:require [net.cgrand.enlive-html :as html])
-  (:import [edu.stanford.nlp.process
-            CoreLabelTokenFactory
-            DocumentPreprocessor
-            PTBTokenizer]
-           [java.io StringReader]))
+  (:require [net.cgrand.enlive-html :as html]
+            [subotai.near-duplicate.shingles :as shingles]))
 
-(def algorithm->fn {:shingles nil})
+(def algorithm->fn {:shingles shingles/near-duplicate?})
 
 (defn near-duplicate?
   ([html-doc1 html-doc2]
