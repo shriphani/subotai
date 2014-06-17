@@ -16,7 +16,8 @@
   ([html-doc1 html-doc2 algorithm]
    (let [make-resource  #(-> %
                              StringReader.
-                             html/html-resource)
+                             html/html-resource
+                             second)
 
          text1 (html/text
                 (make-resource html-doc1))
