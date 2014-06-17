@@ -18,10 +18,12 @@
                                (CoreLabelTokenFactory.)
                                "")]
     (take-while
-     (fn [x] (.hasNext ptb-tok))
+     identity
      (repeatedly
       (fn []
-        (-> ptb-tok .next .toString))))))
+        (if (.hasNext ptb-tok)
+          (-> ptb-tok .next .toString)
+          nil))))))
 
 (defn near-duplicate?
   [text1 text2]
