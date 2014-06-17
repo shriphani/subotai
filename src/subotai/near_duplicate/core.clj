@@ -14,10 +14,10 @@
                       :shingles))
 
   ([html-doc1 html-doc2 algorithm]
-   (let [make-resource  (-> %
-                            html-doc1
-                            StringReader.
-                            html/html-resource)
+   (let [make-resource  #(-> %
+                             html-doc1
+                             StringReader.
+                             html/html-resource)
 
          text1 (html/text
                 (make-resource html-doc1))
