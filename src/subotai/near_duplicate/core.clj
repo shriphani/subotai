@@ -2,7 +2,8 @@
   "Near-Duplicate detection algorithms
    for HTML documents"
   (:require [net.cgrand.enlive-html :as html]
-            [subotai.near-duplicate.shingles :as shingles]))
+            [subotai.near-duplicate.shingles :as shingles])
+  (:import [java.io StringReader]))
 
 (def algorithm->fn {:shingles shingles/near-duplicate?})
 
