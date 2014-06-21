@@ -1,5 +1,6 @@
 (ns subotai.near-duplicate.shingles
   "Implementation of shingles from the IRBook by Manning et al"
+  (:require [subotai.near-duplicate.utils :refer :all])
   (:import [edu.stanford.nlp.process
             CoreLabelTokenFactory
             DocumentPreprocessor
@@ -9,21 +10,6 @@
 (def size-of-grams 4)
 
 (def jaccard-sim-thresh 0.9)
-
-(defn doc->tokens-seq
-  "Converts a doc to a sequence
-   of token strings"
-  [text]
-  (let [ptb-tok (PTBTokenizer. (StringReader. text)
-                               (CoreLabelTokenFactory.)
-                               "")]
-    (take-while
-     identity
-     (repeatedly
-      (fn []
-        (if (.hasNext ptb-tok)
-          (-> ptb-tok .next .toString)
-          nil))))))
 
 (defn text-n-grams
   [text]
