@@ -25,7 +25,7 @@ A list of the algorithms implemented:
 
 For using this with leiningen:
 ```clojure
-[subotai "0.2.5"]
+[subotai "0.2.6"]
 ```
 
 With maven:
@@ -33,7 +33,7 @@ With maven:
 <dependency>
   <groupId>subotai</groupId>
   <artifactId>subotai</artifactId>
-  <version>0.2.5</version>
+  <version>0.2.6</version>
 </dependency>
 ```
 
@@ -92,6 +92,16 @@ user> (def bod-2 (:body (get "http://www.kidneyspace.com/index.php/topic,5304.ms
 #'user/bod-2
 user> (near-duplicate-html? bod-1 bod-2)
 true ; and they are near duplicate
+user> 
+```
+
+Also, you can specify the algorithm you want to use (shingles or
+fingerprint) depending on your choice.
+```clojure
+user> (near-duplicate-html? bod-1 bod-2 :shingles)
+true
+user> (near-duplicate-html? bod-1 bod-2 :fingerprint)
+true
 user> 
 ```
 

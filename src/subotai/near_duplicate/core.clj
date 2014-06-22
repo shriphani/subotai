@@ -41,4 +41,5 @@
    (let [text1 (html->text html-doc1)
          text2 (html->text html-doc2)]
      (near-duplicate-text? text1
-                           text2))))
+                           text2
+                           algorithm))))
