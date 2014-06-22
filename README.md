@@ -24,7 +24,7 @@ A list of the algorithms implemented:
 
 For using this with leiningen:
 ```clojure
-[subotai "0.2.4"]
+[subotai "0.2.5"]
 ```
 
 With maven:
@@ -32,7 +32,7 @@ With maven:
 <dependency>
   <groupId>subotai</groupId>
   <artifactId>subotai</artifactId>
-  <version>0.2.4</version>
+  <version>0.2.5</version>
 </dependency>
 ```
 
