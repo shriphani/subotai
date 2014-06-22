@@ -6,18 +6,19 @@ Subotai contains a swiss-army-knife of data-mining tools on HTML
 documents. It contains routines for:
 
 1. Comparing the similarity (in structure) of HTML documents.
-2. Extracting sets of records from these HTML documents.
+2. Testing if two documents are near-duplicates in a way that scales
+to large web corpora.
 
 ## Literature
 
 A list of the algorithms implemented:
 
 * Structural similarity using tree-edit-distance from [Reis,
-  Davi de Castro, et al](doc/rtdm.pdf).
+  Davi de Castro, et al](doc/rtdm.pdf), and a version I hacked
+  together from a previous project that uses a vector-space
+  representation and cosine similarity.
 * Near-Duplicate Detection (a naive algorithm from the IRBook by
   Manning et al and a scaleable version from [Manku et al](doc/ndd.pdf)).
-* Extract records from a web-page - from
-[Xinying Song, Jing Liu, Yunbo Cao, Chin-Yew Lin, Hsiao-Wuen Hon](doc/extraction.pdf).
 
 
 ## Usage
