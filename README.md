@@ -22,6 +22,20 @@ A list of the algorithms implemented:
 
 ## Usage
 
+For using this with leiningen:
+```clojure
+[subotai "0.2.4"]
+```
+
+With maven:
+```xml
+<dependency>
+  <groupId>subotai</groupId>
+  <artifactId>subotai</artifactId>
+  <version>0.2.4</version>
+</dependency>
+```
+
 ### Structural Similarity
 
 Structural similarity routines are available in the
