@@ -58,10 +58,26 @@ implemented is the shingles algorithm (build a list of 4-grams,
 compute the jaccard similarity, and perform a threshold test). I also
 have a more scaleable algorithm from Manku et al (from WWW '07). To
 compare two HTML documents (we default to the scaleable version but
-you can specify a different algorithm in the function call):
+you can specify a different algorithm in the function call).
+
+For example, here are 2 documents (two documents that contain the same
+content but are arrived at via different links like it often happens
+when you are crawling web-pages).
 
 ```clojure
-
+user> (use 'subotai.near-duplicate.utils)
+nil
+user> (near-duplicate-html? bod-1 bod-2)
+true
+user> (use 'subotai.near-duplicate.core :reload)
+nil
+user> (def bod-1 (:body (get "http://www.kidneyspace.com/index.php/topic,5304.0.html"))) ; this is the first page
+#'user/bod-1
+user> (def bod-2 (:body (get "http://www.kidneyspace.com/index.php/topic,5304.msg30671.html"))) ; this is the second page
+#'user/bod-2
+user> (near-duplicate-html? bod-1 bod-2)
+true ; and they are near duplicate
+user> 
 ```
 
 
