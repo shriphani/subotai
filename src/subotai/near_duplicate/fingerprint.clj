@@ -6,6 +6,8 @@
 
 (def num-dimensions 64)
 
+(def allowed-bits-differ 3)
+
 (def set-bits-nums (map
                     (fn [i] (bit-set 0 i))
                     (range num-dimensions)))
@@ -61,3 +63,12 @@
   (-> a-document
       hash-doc-vector
       vector->fingerprint))
+
+(defn near-duplicate?
+  [doc1 doc2]
+  (let [f1 (fingerprint doc1)
+        f2 (fingerprint doc2)]
+    (<= (bit-xor f1 f2)
+        (dec
+         (int
+          (Math/pow 2 allowed-bits-differ))))))
