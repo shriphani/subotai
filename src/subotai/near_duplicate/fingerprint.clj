@@ -68,7 +68,6 @@
   [doc1 doc2]
   (let [f1 (fingerprint doc1)
         f2 (fingerprint doc2)]
-    (<= (bit-xor f1 f2)
-        (dec
-         (int
-          (Math/pow 2 allowed-bits-differ))))))
+    (<= (Long/bitCount
+         (bit-xor f1 f2))
+        allowed-bits-differ)))
