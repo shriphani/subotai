@@ -8,7 +8,8 @@
 (defn parse-date
   [text]
   (let [parser (Parser.)
-        groups (.parse parser text)
+        groups (try (.parse parser text)
+                    (catch Exception e nil))
 
         dates (flatten
                (map

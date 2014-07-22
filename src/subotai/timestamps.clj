@@ -14,8 +14,10 @@
                        [n
                         (dates/parse-date
                          (.getTextContent n))])
-                     ($x:node* "//text()"
-                               (representation/html->xml-doc a-html-document)))]
+                     (try
+                       ($x:node* "//text()"
+                                 (representation/html->xml-doc a-html-document))
+                       (catch Exception e [])))]
     (filter
      (fn [[n ds]]
        (not
