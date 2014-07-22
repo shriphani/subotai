@@ -1,4 +1,4 @@
-(defproject subotai "0.2.9"
+(defproject subotai "0.2.10"
   :description "Mining HTML documents"
   :url "https://github.com/shriphani/subotai"
   :license {:name "Eclipse Public License"
