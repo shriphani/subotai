@@ -1,6 +1,6 @@
 (ns subotai.timestamps
   "Detecting timestamps in HTML documents"
-  (:use [clj-xpath.core :only [$x:text+ $x:node+]]
+  (:use [clj-xpath.core :only [$x:text+ $x:node*]]
         [subotai.dates :as dates]
         [subotai.representation :as representation])
   (:import (org.htmlcleaner HtmlCleaner DomSerializer CleanerProperties)))
@@ -14,7 +14,7 @@
                        [n
                         (dates/parse-date
                          (.getTextContent n))])
-                     ($x:node+ "//text()"
+                     ($x:node* "//text()"
                                (representation/html->xml-doc a-html-document)))]
     (filter
      (fn [[n ds]]
