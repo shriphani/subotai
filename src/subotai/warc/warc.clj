@@ -45,5 +45,5 @@
   [a-warc-input-stream]
   (filter
    (fn [r]
-     (-> r :header :warc-type (= "response")))
+     (-> r :warc-type (= "response")))
    (stream-warc-records-seq a-warc-input-stream)))
