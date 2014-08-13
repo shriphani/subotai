@@ -1,6 +1,16 @@
 # subotai
 
-<img src="subotai.jpg" /><br />
+<img src="subotai.jpg" align="right" />
+> Subotai died at age 73, by which time he had conquered 32 nations and won 65 pitched battles, 
+> as the Muslim historians tell us. For 60 of those years, Subotai lived as Mongol soldier, 
+> first as a lowly private who kept the tent door of Genghis himself, 
+> rising to be the most brilliant and trusted of Genghis Khan's generals. 
+> When Genghis died, Subotai continued to be the moving force of the Mongol 
+> army under his successors. It was Subotai who planned and participated in
+> the Mongol victories against Korea, China, Persia, and Russia. It was Subotai's
+> conquest of Hungary that destroyed every major army between the 
+> Mongols and the threshold of Europe.
+> - from Subotai the Valiant: Genghis Khan's Greatest General by Richard A. Gabriel
 
 Subotai contains a swiss-army-knife of data-mining tools on HTML
 documents. It contains routines for:
@@ -25,7 +35,7 @@ A list of the algorithms implemented:
 
 For using this with leiningen:
 ```clojure
-[subotai "0.2.8"]
+[subotai "0.2.12"]
 ```
 
 With maven:
@@ -33,7 +43,7 @@ With maven:
 <dependency>
   <groupId>subotai</groupId>
   <artifactId>subotai</artifactId>
-  <version>0.2.8</version>
+  <version>0.2.12</version>
 </dependency>
 ```
 
