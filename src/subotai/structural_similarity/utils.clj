@@ -11,16 +11,19 @@
        (catch Exception e nil)))
 
 (defn html->xml
-  "A html document is converted to an XML object"
-  [a-html-doc]
+  "Converts a html string to an XML object"
+  [page-src]
   (let [cleaner (new HtmlCleaner)
-        
-        cleaner-props (new CleanerProperties)
-        dom-srlzr     (new DomSerializer cleaner-props)
-        
-        cleaned-doc   (.clean cleaner a-html-doc)]
-    
-    (.createDOM dom-srlzr cleaned-doc)))
+        props (doto (.getProperties cleaner)
+                (.setPruneTags "script, style")
+                (.setOmitComments true))
+        cleaned-text (.clean cleaner page-src)
+        cleaner-props  (new CleanerProperties)
+
+        dom-serializer (new DomSerializer cleaner-props)
+
+        node (.createDOM dom-serializer cleaned-text)]
+    node))
 
 (defn anchor-nodes
   [a-node]
