@@ -23,7 +23,7 @@
   (map
    (fn [r]
      (let [header (.getHeaderMetadata r)
-           payload (.getContent r)]
+           payload (.getContentUTF8 r)] ; this keeps the HTTP header component
        
        (merge
         (into
