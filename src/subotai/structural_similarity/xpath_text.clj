@@ -3,7 +3,8 @@
    as a metric"
   (:require [subotai.structural-similarity.utils :as utils]
             [clojure.string :as string])
-  (:use [clj-xpath.core :only [$x:node+]]))
+  (:use [clj-xpath.core :only [$x:node+]])
+  (:import [com.google.common.base CharMatcher]))
 
 (def *sim-thresh* 0.58)
 
@@ -35,7 +36,8 @@
                                 (map node->xpath-component
                                      nodes-to-root)
                                 ["text()"])
-              node-text        (.getNodeValue t)]
+              node-text        (.trimFrom CharMatcher/WHITESPACE
+                                          (.getNodeValue t))]
           [(string/join "/" (cons "/" xpath-components)) node-text]))
       text-nodes))))
 

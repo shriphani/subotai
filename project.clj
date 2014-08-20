@@ -1,4 +1,4 @@
-(defproject subotai "0.2.13"
+(defproject subotai "0.2.14"
   :description "Mining HTML documents"
   :url "https://github.com/shriphani/subotai"
   :license {:name "Eclipse Public License"
@@ -6,6 +6,7 @@
   :dependencies [[clj-http "0.7.9"]
                  [clj-time "0.7.0"]
                  [com.github.kyleburton/clj-xpath "1.4.3"]
+                 [com.google.guava/guava "17.0"]
                  [com.joestelmach/natty "0.8"]
                  [digest "1.4.4"]
                  [edu.stanford.nlp/stanford-parser "3.3.1"]
