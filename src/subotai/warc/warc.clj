@@ -47,3 +47,13 @@
    (fn [r]
      (-> r :warc-type (= "response")))
    (stream-warc-records-seq a-warc-input-stream)))
+
+(defn stream-html-records-seq
+  "Looks at the http headers of the records
+   in the stream and works with those."
+  [a-warc-input-stream]
+  (filter
+   (fn [r]
+     (and (->> r :payload (re-find #"text/html"))
+          (-> r :warc-type (= "response"))))
+   (stream-warc-records-seq a-warc-input-stream)))
