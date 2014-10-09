@@ -2,7 +2,6 @@
   (:require [clj-http.client :as client]
             [clojure.set :as clj-set]
             [clojure.string :as string])
-  (:use [clj-xpath.core :only [$x:node+]])
   (:import [org.htmlcleaner HtmlCleaner DomSerializer CleanerProperties]))
 
 (defn page-body
@@ -14,48 +13,32 @@
   "Converts a html string to an XML object"
   [page-src]
   (let [cleaner (new HtmlCleaner)
-        props (doto (.getProperties cleaner)
-                (.setPruneTags "script, style")
-                (.setOmitComments true))
-        cleaned-text (.clean cleaner page-src)
-        cleaner-props  (new CleanerProperties)
-
-        dom-serializer (new DomSerializer cleaner-props)
-
-        node (.createDOM dom-serializer cleaned-text)]
-    node))
+        props   (doto (.getProperties cleaner)
+                  (.setPruneTags "script, style")
+                  (.setOmitComments true))
+        cleaned (.clean cleaner page-src)]
+    cleaned))
 
 (defn anchor-nodes
   [a-node]
-  (try ($x:node+ ".//a" a-node)
-       (catch RuntimeException e [])))
-
-(defn text-nodes
-  [a-node]
-  (try ($x:node+ ".//text()" a-node)
-       (catch RuntimeException e [])))
+  (.getElementsByName a-node
+                      "a"
+                      true))
 
 (defn nodes-to-root
   "Returns nodes from document root to
    supplied argument (included)"
   [a-node]
-  (drop
-   1 ; we are dropping the first ele since it is not html
-   (reverse
-    (take-while identity
-                (iterate
-                 (fn [x]
-                   (.getParentNode x))
-                 a-node)))))
+  (reverse
+   (take-while identity
+               (iterate
+                (fn [x]
+                  (.getParent x))
+                a-node))))
 
 (defn node-attr
   [a-node key]
-  (try
-   (-> a-node
-       (.getAttributes)
-       (.getNamedItem key)
-       (.getValue))
-   (catch NullPointerException e nil)))
+  (.getAttributeByName a-node key))
 
 (defn remove-trailing-digits
   [a-string]
@@ -98,3 +81,32 @@
             (zero? mod-y))
       0
       (/ inner-prod (* mod-x mod-y)))))
+
+(defn fix-string
+  [a-string]
+  (-> a-string string/trim))
+
+(defn tree-walk-vector-space
+  "Walks a tree and generates a vector space
+   representation of the desired stuff"
+  ([root path-so-far]
+     (tree-walk-vector-space root
+                             path-so-far
+                             #(-> % (.getText) (.toString) fix-string)))
+  ([root path-so-far leaf-op]
+   (let [children  (.getChildTags root)
+         path-item [(.getName root)
+                    (fix-class-attribute
+                     (node-attr root "class"))]]
+    
+     (cond (empty? children)
+           [(conj path-so-far path-item)
+            (leaf-op root)]
+
+           :else
+           (mapcat
+            (fn [c]
+              (tree-walk-vector-space c
+                                      (conj path-so-far
+                                            path-item)))
+            children)))))
