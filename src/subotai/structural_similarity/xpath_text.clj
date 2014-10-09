@@ -8,55 +8,35 @@
 
 (def *sim-thresh* 0.58)
 
-(defn node->xpath-component
-  "Supplied a node, we produce an xpath component bruh. Make it
-   a text-node pls"
-  [a-node]
-  (let [name  (.getNodeName a-node)
-        class (utils/fix-class-attribute
-               (utils/node-attr a-node
-                                "class"))]
-    (if-not class
-      name
-      (format "%s[contains(@class, '%s')]" name class))))
+(defn path->xpath
+  [path]
+  (let [path-segment (fn [[tag class]]
+                       (if (nil? class)
+                         tag
+                         (str tag "[contains(@class, '" class "')]")))]
+   (string/join "/" (map path-segment path))))
 
-(defn page-text-xpaths
+(defn page-vectors
   "Accepts a html document and produces a
    list of XPaths with the associated text"
   [a-doc]
-  (and
-   a-doc
-   (let [xml-document (utils/html->xml a-doc)
-         text-nodes   (utils/text-nodes xml-document)]
-     (map
-      (fn [t]
-        (let [nodes-to-root    (drop-last ; last node is named #text
-                                (utils/nodes-to-root t))
-              xpath-components (concat
-                                (map node->xpath-component
-                                     nodes-to-root)
-                                ["text()"])
-              node-text        (.trimFrom CharMatcher/WHITESPACE
-                                          (.getNodeValue t))]
-          [(string/join "/" (cons "/" xpath-components)) node-text]))
-      text-nodes))))
-
-(defn char-frequency-representation
-  "Provide a set of xpath and text pairs,
-   this representation returns (xpath, char) pairs"
-  [text-xpaths-coll]
-  (reduce
-   (fn [acc [x text]]
-     (merge-with +' acc {x (count text)}))
-   {}
-   text-xpaths-coll))
+  (let [paths-text (-> a-doc
+                       utils/process-page
+                       utils/tree-walk-vector-space)]
+    (reduce
+     (fn [acc [path text]]
+       (merge-with +' acc {(path->xpath path)
+                           (if (nil? text)
+                             0
+                             (count
+                              (.trimFrom CharMatcher/WHITESPACE text)))}))
+     {}
+     paths-text)))
 
 (defn similarity-cosine-char-freq
   [doc1 doc2]
-  (let [r1 (char-frequency-representation
-            (page-text-xpaths doc1))
-        r2 (char-frequency-representation
-            (page-text-xpaths doc2))]
+  (let [r1 (page-vectors doc1)
+        r2 (page-vectors doc2)]
     (utils/cosine-similarity r1 r2)))
 
 (defn similar?

@@ -9,8 +9,8 @@
   (try (-> a-link client/get :body)
        (catch Exception e nil)))
 
-(defn html->xml
-  "Converts a html string to an XML object"
+(defn process-page
+  "Process a webpage using HTML cleaner"
   [page-src]
   (let [cleaner (new HtmlCleaner)
         props   (doto (.getProperties cleaner)
@@ -89,6 +89,11 @@
 (defn tree-walk-vector-space
   "Walks a tree and generates a vector space
    representation of the desired stuff"
+  ([root]
+     (partition
+      2
+      (tree-walk-vector-space root [])))
+  
   ([root path-so-far]
      (tree-walk-vector-space root
                              path-so-far
