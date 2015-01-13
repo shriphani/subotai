@@ -15,4 +15,5 @@
                  [net.sourceforge.htmlcleaner/htmlcleaner "2.6"]
                  [org.clojure/clojure "1.5.1"]
                  [org.clueweb/clueweb-tools "0.3"]
-                 [org.netpreserve.commons/commons-web "1.1.0"]])
+                 [org.netpreserve.commons/commons-web "1.1.0"]
+                 [org.jsoup/jsoup "1.8.1"]])
