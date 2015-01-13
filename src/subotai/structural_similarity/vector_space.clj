@@ -1,9 +1,8 @@
-(ns subotai.structural-similarity.xpath-text
-  "Compute XPaths to text and use cosine similarity
-   as a metric"
+(ns subotai.structural-similarity.vector-space
+  "Convert a webpage into vectors and use cosine
+  similarities"
   (:require [subotai.structural-similarity.utils :as utils]
             [clojure.string :as string])
-  (:use [clj-xpath.core :only [$x:node+]])
   (:import [com.google.common.base CharMatcher]))
 
 (def *sim-thresh* 0.58)

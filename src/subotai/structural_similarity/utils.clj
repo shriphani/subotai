@@ -81,7 +81,8 @@
   representation of the page.
   Example vector space representation:
   [s chars-at-s]"
-  ([root] (tree-walk-vector-space root [] #(.text %)))
+  ([root]
+   (partition 2 (tree-walk-vector-space root [] #(.text %))))
 
   ([root path-so-far leaf-op]
    (let [children  (.children root)
