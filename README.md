@@ -19,6 +19,9 @@ documents. It contains routines for:
 2. Testing if two documents are near-duplicates in a way that scales
 to large web corpora.
 
+## CircleCI
+<img src="https://circleci.com/gh/shriphani/subotai.svg?&style=shield&circle-token=451c6229d6c7a2b16e36a9f76224066c9ce3fa68" />
+
 ## Literature
 
 A list of the algorithms implemented:
