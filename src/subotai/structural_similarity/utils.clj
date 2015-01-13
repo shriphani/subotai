@@ -2,7 +2,10 @@
   (:require [clj-http.client :as client]
             [clojure.set :as clj-set]
             [clojure.string :as string])
-  (:import [org.htmlcleaner HtmlCleaner DomSerializer CleanerProperties]))
+  (:import [org.jsoup Jsoup]
+           [org.jsoup.nodes Document]
+           [org.jsoup.nodes Element]
+           [org.jsoup.select Elements]))
 
 (defn page-body
   [a-link]
@@ -10,20 +13,16 @@
        (catch Exception e nil)))
 
 (defn process-page
-  "Process a webpage using HTML cleaner"
+  "Parse a webpage using the HTML lib and
+   return the parsed object"
   [page-src]
-  (let [cleaner (new HtmlCleaner)
-        props   (doto (.getProperties cleaner)
-                  (.setPruneTags "script, style")
-                  (.setOmitComments true))
-        cleaned (.clean cleaner page-src)]
-    cleaned))
+  (Jsoup/parse page-src))
 
 (defn anchor-nodes
+  "Returns a seq of anchor
+   tags enclosed in a HTML node"
   [a-node]
-  (.getElementsByName a-node
-                      "a"
-                      true))
+  (.getElementsByTag a-node "a"))
 
 (defn nodes-to-root
   "Returns nodes from document root to
@@ -33,26 +32,17 @@
    (take-while identity
                (iterate
                 (fn [x]
-                  (.getParent x))
+                  (.parent x))
                 a-node))))
 
 (defn node-attr
   [a-node key]
-  (.getAttributeByName a-node key))
+  (.attr a-node key))
 
 (defn remove-trailing-digits
   [a-string]
   (let [trailing-digits (re-find #"\d*$" a-string)]
     (string/replace a-string trailing-digits "")))
-
-(defn fix-class-attribute
-  "We produce a class attribute that matters"
-  [a-class-attr]
-  (and
-   a-class-attr
-   (first
-    (let [potential-classes (string/split a-class-attr #"-|_|\s+")]
-      (map remove-trailing-digits potential-classes)))))
 
 (defn magnitude
   [x]
@@ -88,30 +78,21 @@
 
 (defn tree-walk-vector-space
   "Walks a tree and generates a vector space
-   representation of the desired stuff"
-  ([root]
-     (partition
-      2
-      (tree-walk-vector-space root [])))
-  
-  ([root path-so-far]
-     (tree-walk-vector-space root
-                             path-so-far
-                             #(-> % (.getText) (.toString) fix-string)))
-  ([root path-so-far leaf-op]
-   (let [children  (.getChildTags root)
-         path-item [(.getName root)
-                    (fix-class-attribute
-                     (node-attr root "class"))]]
-    
-     (cond (empty? children)
-           [(conj path-so-far path-item)
-            (leaf-op root)]
+  representation of the page.
+  Example vector space representation:
+  [s chars-at-s]"
+  ([root] (tree-walk-vector-space root [] #(.text %)))
 
-           :else
-           (mapcat
-            (fn [c]
-              (tree-walk-vector-space c
-                                      (conj path-so-far
-                                            path-item)))
-            children)))))
+  ([root path-so-far leaf-op]
+   (let [children  (.children root)
+         path-item [(.nodeName root) (.className root)]
+         updated-path (conj path-so-far path-item)]
+
+     (if (empty? children)
+       [updated-path (leaf-op root)]
+       (mapcat
+        (fn [c]
+          (tree-walk-vector-space c
+                                  updated-path
+                                  leaf-op))
+        children)))))
