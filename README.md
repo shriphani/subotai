@@ -35,20 +35,7 @@ A list of the algorithms implemented:
 
 
 ## Usage
-
-For using this with leiningen:
-```clojure
-[subotai "0.2.17"]
-```
-
-With maven:
-```xml
-<dependency>
-  <groupId>subotai</groupId>
-  <artifactId>subotai</artifactId>
-  <version>0.2.16</version>
-</dependency>
-```
+[![Clojars Project](http://clojars.org/subotai/latest-version.svg)](http://clojars.org/subotai)
 
 ### Structural Similarity
 
@@ -60,7 +47,7 @@ example, different pages of the same blog):
 
 ```clojure
 user=> (use 'clj-http.client)
-user=> (use 'subotai.structural-similarity.core :reload)
+user=> (use 'subotai.structural-similarity :reload)
 user=> (def bod1 (:body (get "http://blog.shriphani.com/"))) ; this is page 1
 #'user/bod1
 user=> (def bod2 (:body (get "http://blog.shriphani.com/index-2.html"))) ; this is page 2
