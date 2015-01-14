@@ -97,3 +97,29 @@
                                   updated-path
                                   leaf-op))
         children)))))
+
+(defn format-class-for-selector
+  [css]
+  (string/join
+   ""
+   (map
+    (fn [s]
+      (str "." s))
+    (string/split css #"\s+"))))
+
+(defn path->css-selector
+  "Generates a CSS selector for a path.
+  A path is a list of tagnames and class
+  attributes"
+  [a-path]
+  (string/join
+   " > "
+   (map
+    (fn [[tag class]]
+      (let [formatted-class (if-not (string/blank? class)
+                              (format-class-for-selector class)
+                              "")]
+        (if-not (string/blank? formatted-class)
+          (str tag formatted-class)
+          tag)))
+    a-path)))

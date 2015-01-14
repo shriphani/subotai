@@ -4,94 +4,56 @@
    data-mining algorithms"
   (:require [clojure.string :as string])
   (:use [clj-xpath.core :only [$x:text+ $x:node+]]
-        [subotai.dates :as dates])
-  (:import (org.htmlcleaner HtmlCleaner DomSerializer CleanerProperties)))
+        [subotai.dates :as dates]
+        [subotai.structural-similarity.utils :as utils]))
 
-(defn process-page
+(defn trim-path-to-html
+  "Libraries often have dummy document tags
+  as doc-roots. We would rather our selectors
+  and links begin with the html tag"
+  [a-path]
+  (drop-while #(-> %
+                   first
+                   (= "html")
+                   not)
+              a-path))
+
+(defn group-links
+  "Groups similar links together.
+  Assigns a selector (or XPath) to links
+  and groups the links by these xpaths"
   [page-src]
-  (let [cleaner (new HtmlCleaner)
-        props   (.getProperties cleaner)
-        _       (.setPruneTags props "script, style")
-        _       (.setOmitComments props true)]
-    (.clean cleaner page-src)))
+  (let [processed-page (utils/process-page page-src)
+        grouped-nodes  (partition
+                        2
+                        (utils/tree-walk-vector-space processed-page
+                                                      []
+                                                      (fn [a-node]
+                                                        (when (=
+                                                               (.nodeName a-node)
+                                                               "a")
+                                                          (.attr a-node
+                                                                 "href")))))
+        grouped-links
+        (filter second grouped-nodes)
 
-(defn html->xml-doc
-  "Take the html and produce an xml version"
+        fixed-path-grouped-links (map
+                                  (fn [[path link]]
+                                    [(trim-path-to-html path) link])
+                                  grouped-links)]
+    (reduce
+     (fn [grouped [path link]]
+       (merge-with concat grouped {path [link]}))
+     {}
+     fixed-path-grouped-links)))
+
+(defn group-links-with-selectors
+  "Generate grouped links and use selectors"
   [page-src]
-  (let [tag-node       (-> page-src
-                           process-page)
-
-        cleaner-props  (new CleanerProperties)
-
-        dom-serializer (new DomSerializer cleaner-props)]
-    
-    (-> dom-serializer
-        (.createDOM tag-node))))
-
-(defn nodes-to-root
-  "Build a path from current node
-   to the document root"
-  ([a-node]
-     (nodes-to-root a-node
-                    []))
-  
-  ([a-node current-path]
-     (let [parent (.getParentNode a-node)]
-      (if (not= (.getNodeName parent)
-                "#document")
-        (recur parent (cons a-node current-path))
-        (cons a-node current-path)))))
-
-(defn node-class
-  "Value of the class attribute of a node.
-   We split on hyphens and underscores and
-   remove trailing digits to account for
-   weirdness"
-  [a-node]
-  (let [existing (try (-> a-node
-                          (.getAttributes)
-                          (.getNamedItem "class")
-                          (.getValue))
-                      (catch Exception e nil))]
-    (if-not (nil? existing)
-      (string/replace
-       (first
-        (string/split existing #"-|_|\s+"))
-       #"\d+$"
-       "")
-      nil)))
-
-(defn child-position
-  [parent a-w3c-node]
-  (let [child-node-list (.getChildNodes parent)
-        child-nodes-cnt (.getLength child-node-list)
-        child-nodes     (filter
-                         (fn [a-node]
-                           (and (= (.getNodeName a-node)
-                                   (.getNodeName a-w3c-node))
-                                (= (node-class a-node)
-                                   (node-class a-w3c-node))))
-                         (map
-                          #(.item child-node-list %)
-                          (range child-nodes-cnt)))]
-    (.indexOf
+  (let [paths-links (group-links page-src)]
+    (into
+     {}
      (map
-      #(.isSameNode % a-w3c-node)
-      child-nodes)
-     true)))
-
-(defn nodes-and-positions-to-root
-  "Build a path from nodes to root
-   positions
-   Args: a list of nodes with parent-child relationships"
-  [a-node-path]
-  (let [nodes-parents (map vector a-node-path (rest a-node-path))]
-    {:path      (map
-                 (fn [n]
-                   [(.getNodeName n)
-                    (node-class n)])
-                 a-node-path)
-     :positions (map
-                 (fn [[p n]]
-                   (child-position p n))
-                 nodes-parents)}))
+      (fn [[path links]]
+        [(utils/path->css-selector path) links])
+      paths-links))))
