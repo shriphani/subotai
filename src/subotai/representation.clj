@@ -26,14 +26,15 @@
   (let [processed-page (utils/process-page page-src)
         grouped-nodes  (partition
                         2
-                        (utils/tree-walk-vector-space processed-page
-                                                      []
-                                                      (fn [a-node]
-                                                        (when (=
-                                                               (.nodeName a-node)
-                                                               "a")
-                                                          (.attr a-node
-                                                                 "href")))))
+                        (utils/tree-walk-vector-space
+                         processed-page
+                         []
+                         (fn [a-node]
+                           (when (= (.nodeName a-node)
+                                    "a")
+                             {:href (.attr a-node "href")
+                              :text (string/trim
+                                     (.text a-node))}))))
         grouped-links
         (filter second grouped-nodes)
 
