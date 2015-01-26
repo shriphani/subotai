@@ -15,18 +15,16 @@
 (defn remove-comments
   "Remove comments from the dom"
   [root]
-  (let [children (.childNodes root)
-        comment-nodes
-        (filter
-         identity
-         (map
-          (fn [child]
-            (if (= (.nodeName child) "#comment")
-              child
-              (remove-comments child)))
-          children))]
-    (doseq [a-node comment-nodes]
-      (.remove a-node))))
+  (let [children (.childNodes root)]
+    (map
+     (fn [i]
+       (let [child (.childNode children i)
+             child-name (.nodeName child)]
+         (if (= child-name "#comment")
+           (.remove child)
+           (remove-comments child))))
+     (range
+      (count children)))))
 
 (defn process-page
   "Parse a webpage using the HTML lib and
