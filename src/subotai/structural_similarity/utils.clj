@@ -12,11 +12,26 @@
   (try (-> a-link client/get :body)
        (catch Exception e nil)))
 
+(defn remove-comments
+  "Remove comments from the dom"
+  [root]
+  (let [children (.childNodes root)]
+    (doseq [child children]
+      (if (= (.nodeName) "#comment")
+        (.remove child)
+        (remove-comments child)))))
+
 (defn process-page
   "Parse a webpage using the HTML lib and
-   return the parsed object"
+  return the parsed object.
+  Right now we nuke script, style and comments
+  using selectors and a walk (can't think of anything simpler)"
   [page-src]
-  (Jsoup/parse page-src))
+  (let [doc (Jsoup/parse page-src)]
+    (do (.remove
+         (.select doc "script, style")) ; remove script, style tags
+        (remove-comments doc)
+        doc)))
 
 (defn anchor-nodes
   "Returns a seq of anchor

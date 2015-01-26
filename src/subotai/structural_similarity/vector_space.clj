@@ -10,7 +10,8 @@
 (defn path->xpath
   [path]
   (let [path-segment (fn [[tag class]]
-                       (if (nil? class)
+                       (if (or (string/blank? class)
+                               (nil? class))
                          tag
                          (str tag "[contains(@class, '" class "')]")))]
    (string/join "/" (map path-segment path))))
